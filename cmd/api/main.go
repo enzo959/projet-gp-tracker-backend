@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/enzo959/projet-gp-tracker-backend/internal/database"
+	"github.com/enzo959/projet-gp-tracker-backend/internal/handlers"
 )
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +33,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 
 	r.Get("/health", healthHandler)
+	r.Get("/artists", handlers.GetArtists)
 
 	log.Println("Le serveur se lance sur :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
