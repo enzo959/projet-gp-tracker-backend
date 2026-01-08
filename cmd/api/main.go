@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -12,13 +11,6 @@ import (
 	"github.com/enzo959/projet-gp-tracker-backend/internal/database"
 	"github.com/enzo959/projet-gp-tracker-backend/internal/handlers"
 )
-
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"statu": "ok",
-	})
-}
 
 func main() {
 	// connexion postgreSQL
@@ -32,7 +24,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/health", healthHandler)
+	r.Get("/health", handlers.GetHealth)
 	r.Get("/artists", handlers.GetArtists)
 
 	log.Println("Le serveur se lance sur :8080")
