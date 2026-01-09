@@ -19,6 +19,12 @@ type Concert struct {
 	TotalTickets int       `json:"total_tickets"`
 }
 
+type ArtistResponse struct {
+	ID       int       `json:"id"`
+	Name     string    `json:"name"`
+	Concerts []Concert `json:"concerts"`
+}
+
 func fetchConcerts(query string, args ...any) ([]Concert, error) {
 	rows, err := database.DB.Query(context.Background(), query, args...)
 	if err != nil {
@@ -73,4 +79,36 @@ func GetConcertsByArtist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(concerts)
+}
+
+func GetArtistByID(w http.ResponseWriter, r *http.Request) {
+	artistID := chi.URLParam(r, "id")
+	ctx := context.Background()
+
+	var artist ArtistResponse
+	err := database.DB.QueryRow(
+		ctx,
+		`SELECT id, name FROM artists WHERE id = $1`,
+		artistID,
+	).Scan(&artist.ID, &artist.Name)
+
+	if err != nil {
+		http.Error(w, "artist not found", http.StatusNotFound)
+		return
+	}
+
+	concerts, err := fetchConcerts(`
+		SELECT id, artist_id, date, location, price_cents, total_tickets
+		FROM concerts
+		WHERE artist_id = $1
+	`, artistID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	artist.Concerts = concerts
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(artist)
 }
