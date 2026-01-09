@@ -29,6 +29,7 @@ func main() {
 	r.Get("/concerts", handlers.GetConcerts)
 	r.Get("/artists/{id}", handlers.GetArtistByID)
 	r.Get("/artists/{id}/concerts", handlers.GetConcertsByArtist)
+	r.Post("/auth/register", handlers.Register)
 
 	log.Println("Le serveur se lance sur :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
