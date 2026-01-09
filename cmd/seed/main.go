@@ -21,4 +21,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if err := seedUsers(); err != nil {
+		log.Fatal(err)
+	}
+
 }

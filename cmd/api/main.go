@@ -4,11 +4,12 @@ import (
 	"log"
 	"net/http"
 
+	myMiddleware "github.com/enzo959/projet-gp-tracker-backend/internal/middleware"
 	"github.com/joho/godotenv"
 
 	//chi
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 
 	"github.com/enzo959/projet-gp-tracker-backend/internal/database"
 	"github.com/enzo959/projet-gp-tracker-backend/internal/handlers"
@@ -27,17 +28,26 @@ func main() {
 	// routing
 	r := chi.NewRouter()
 
-	// middlewares de base fournit par chi
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+	// Middleware général de chi
+	r.Use(chiMiddleware.Logger)
+	r.Use(chiMiddleware.Recoverer)
 
-	r.Get("/health", handlers.GetHealth)
-	r.Get("/artists", handlers.GetArtists)
-	r.Get("/concerts", handlers.GetConcerts)
-	r.Get("/artists/{id}", handlers.GetArtistByID)
-	r.Get("/artists/{id}/concerts", handlers.GetConcertsByArtist)
+	// Route publique
 	r.Post("/auth/register", handlers.Register)
 	r.Post("/auth/login", handlers.Login)
+
+	// Routes sécurisées
+	r.Route("/artists", func(r chi.Router) {
+		r.Use(myMiddleware.JWT)
+		r.Get("/", handlers.GetArtists)
+		r.Get("/{id}", handlers.GetArtistByID)
+		r.Get("/{id}/concerts", handlers.GetConcertsByArtist)
+	})
+
+	r.Route("/concerts", func(r chi.Router) {
+		r.Use(myMiddleware.JWT)
+		r.Get("/", handlers.GetConcerts)
+	})
 
 	log.Println("Le serveur se lance sur :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
