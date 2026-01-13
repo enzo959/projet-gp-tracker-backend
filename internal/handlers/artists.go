@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/enzo959/projet-gp-tracker-backend/internal/database"
+	"github.com/enzo959/projet_gp_tracker_backend/internal/database"
 )
 
 type Artist struct {

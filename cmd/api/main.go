@@ -46,12 +46,9 @@ func main() {
 	// routes protégées
 	r.Group(func(r chi.Router) {
 		r.Use(myMiddleware.JWT)
-		r.Post("/concerts", handlers.CreateConcert)
-	})
 
-	r.Route("/concerts", func(r chi.Router) {
-		r.Use(myMiddleware.JWT)
-		r.Get("/", handlers.GetConcerts)
+		r.Post("/concerts", handlers.CreateConcert)
+		r.Get("/concerts", handlers.GetConcerts)
 	})
 
 	log.Println("Le serveur se lance sur :8080")
