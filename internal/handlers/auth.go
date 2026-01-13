@@ -7,10 +7,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/enzo959/projet-gp-tracker-backend/internal/database"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
-
-	"github.com/enzo959/projet-gp-tracker-backend/internal/database"
 )
 
 type RegisterRequest struct {
