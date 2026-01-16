@@ -40,19 +40,35 @@ func main() {
 	// Routes sécurisées
 	r.Route("/artists", func(r chi.Router) {
 		r.Use(myMiddleware.JWT)
+
 		r.Get("/", handlers.GetArtists)
 		r.Get("/{id}", handlers.GetArtistByID)
 		r.Get("/{id}/concerts", handlers.GetConcertsByArtist)
+	})
+	r.Route("/concerts", func(r chi.Router) {
+		r.Use(myMiddleware.JWT)
+
+		r.Get("/", handlers.GetConcerts)
+
 	})
 	// routes protégées
 	r.Group(func(r chi.Router) {
 		r.Use(myMiddleware.JWT)
 		r.Use(myMiddleware.AdminOnly)
 
-		r.Post("/concerts", handlers.CreateConcert)
-		r.Get("/concerts", handlers.GetConcerts)
-		r.Put("/{id}", handlers.UpdateConcert)
-		r.Delete("/{id}", handlers.DeleteConcert)
+		// Concerts admin
+		r.Route("/concerts", func(r chi.Router) {
+			r.Post("/", handlers.CreateConcert)
+			r.Put("/{id}", handlers.UpdateConcert)
+			r.Delete("/{id}", handlers.DeleteConcert)
+		})
+
+		// Artistes admin
+		r.Route("/artists", func(r chi.Router) {
+			r.Post("/", handlers.CreateArtist)
+			r.Put("/{id}", handlers.UpdateArtist)
+			r.Delete("/{id}", handlers.DeleteArtist)
+		})
 	})
 
 	log.Println("Le serveur se lance sur :8080")
