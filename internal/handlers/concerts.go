@@ -161,3 +161,56 @@ func CreateConcert(w http.ResponseWriter, r *http.Request) {
 		"message": "concert créé avec succès.",
 	})
 }
+
+func UpdateConcert(w http.ResponseWriter, r *http.Request) {
+	var input CreateConcertInput
+	id := chi.URLParam(r, "id") // récupère l'ID du concert depuis l'URL
+
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "invalid JSON body", http.StatusBadRequest)
+		return
+	}
+
+	_, err := database.DB.Exec(
+		context.Background(),
+		`UPDATE concerts
+		 SET artist_id=$1, date=$2, location=$3, price_cents=$4, total_tickets=$5
+		 WHERE id=$6`,
+		input.ArtistID,
+		input.Date,
+		input.Location,
+		input.PriceCents,
+		input.TotalTickets,
+		id,
+	)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "concert mis à jour avec succès",
+	})
+}
+
+func DeleteConcert(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id") // récupère l'ID du concert depuis l'URL
+
+	_, err := database.DB.Exec(
+		context.Background(),
+		`DELETE FROM concerts WHERE id=$1`,
+		id,
+	)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "concert supprimé avec succès",
+	})
+}

@@ -51,6 +51,8 @@ func main() {
 
 		r.Post("/concerts", handlers.CreateConcert)
 		r.Get("/concerts", handlers.GetConcerts)
+		r.Put("/{id}", handlers.UpdateConcert)
+		r.Delete("/{id}", handlers.DeleteConcert)
 	})
 
 	log.Println("Le serveur se lance sur :8080")
