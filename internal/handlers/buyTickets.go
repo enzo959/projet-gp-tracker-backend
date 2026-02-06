@@ -13,12 +13,12 @@ func BuyTicket(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(int)
 	concertID, _ := strconv.Atoi(chi.URLParam(r, "id"))
 
-	var totalTickets int
+	var TotalTickets int
 	err := database.DB.QueryRow(
 		context.Background(),
-		"SELECT total_tickets FROM concerts WHERE id=$1",
+		"SELECT Total_tickets FROM concerts WHERE id=$1",
 		concertID,
-	).Scan(&totalTickets)
+	).Scan(&TotalTickets)
 
 	if err != nil {
 		http.Error(w, "concert not found", http.StatusNotFound)
@@ -32,7 +32,7 @@ func BuyTicket(w http.ResponseWriter, r *http.Request) {
 		concertID,
 	).Scan(&sold)
 
-	if sold >= totalTickets {
+	if sold >= TotalTickets {
 		http.Error(w, "sold out", http.StatusBadRequest)
 		return
 	}
