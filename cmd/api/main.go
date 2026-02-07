@@ -36,6 +36,7 @@ func main() {
 	// Route publique
 	r.Post("/auth/register", handlers.Register)
 	r.Post("/auth/login", handlers.Login)
+	r.Get("/", handlers.GetConcerts)
 
 	// routes protégées
 	r.Route("/concerts", func(r chi.Router) {
