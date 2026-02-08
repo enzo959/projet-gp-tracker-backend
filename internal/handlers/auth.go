@@ -9,7 +9,7 @@ import (
 
     "github.com/enzo959/projet_gp_tracker_backend/internal/database"
     "github.com/golang-jwt/jwt/v5"
-    "github.com/jackc/pgconn"
+    "github.com/jackc/pgconn"  //détecter les erreurs de duplication
     "golang.org/x/crypto/bcrypt"
 )
 
@@ -63,13 +63,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
         req.Email,
         string(hash),
     ).Scan(&userID)
-
+        // gérer les erreurs de duplication d'email
     if err != nil {
         if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
             http.Error(w, "email already exists", http.StatusConflict)
             return
         }
-        http.Error(w, "internal server error", http.StatusInternalServerError)
+        http.Error(w, "internal server error", http.StatusInternalServerError)  // pour les autres erreurs
         return
     }
 
@@ -125,6 +125,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    // signer le token avec la clé secrète
     tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
     if err != nil {
         http.Error(w, "vous ne pouvez pas créer de token", http.StatusInternalServerError)
