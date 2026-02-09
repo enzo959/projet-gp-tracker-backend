@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -55,6 +56,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userID int
+
+	log.Println("Tentative d'ajout user :", req.Email)
+
 	err = database.DB.QueryRow(
 		context.Background(),
 		`INSERT INTO users (email, password_hash, role)
