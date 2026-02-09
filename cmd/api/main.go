@@ -47,7 +47,7 @@ func main() {
 
 		// méthodes admin
 		r.Group(func(r chi.Router) {
-			r.Use(myMiddleware.AdminOnly)
+			//r.Use(myMiddleware.AdminOnly)
 			r.Post("/", handlers.CreateConcert)
 			r.Put("/{id}", handlers.UpdateConcert)
 			r.Delete("/{id}", handlers.DeleteConcert)
@@ -64,7 +64,7 @@ func main() {
 
 		// méthodes admin
 		r.Group(func(r chi.Router) {
-			r.Use(myMiddleware.AdminOnly)
+			//r.Use(myMiddleware.AdminOnly)
 			r.Post("/", handlers.CreateArtist)
 			r.Put("/{id}", handlers.UpdateArtist)
 			r.Delete("/{id}", handlers.DeleteArtist)
