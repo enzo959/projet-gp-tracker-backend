@@ -1,1 +1,1 @@
-DROP TABLE concerts;
+DROP TABLE IF EXISTS concerts;
