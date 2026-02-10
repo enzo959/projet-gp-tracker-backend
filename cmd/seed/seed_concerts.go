@@ -36,7 +36,7 @@ func seedConcerts() error {
 
 		_, err = database.DB.Exec(
 			ctx,
-			`INSERT INTO concerts (artist_id, date, location, price_cents, total_tickets, image_url)
+			`INSERT INTO concerts (artist_id, date, location, price_cents, total_tickets, detail, image_url)
 			VALUES ($1, $2, $3, $4, $5, $6, $7)
 			ON CONFLICT DO NOTHING`,
 			c.ArtistID, date, c.Location, c.PriceCents, c.TotalTickets, c.Detail, c.ImageURL,
