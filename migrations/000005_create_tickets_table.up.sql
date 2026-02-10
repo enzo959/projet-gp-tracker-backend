@@ -11,4 +11,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     CONSTRAINT fk_ticket_concert
         FOREIGN KEY (concert_id) REFERENCES concerts(id)
         ON DELETE CASCADE
+
+    CONSTRAINT unique_user_concert
+        UNIQUE (user_id, concert_id)
 );
