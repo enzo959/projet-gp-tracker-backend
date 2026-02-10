@@ -5,4 +5,5 @@ CREATE TABLE concerts (
     location TEXT NOT NULL,
     price_cents INT NOT NULL,
     total_tickets INT NOT NULL
+    image_url TEXT
 );

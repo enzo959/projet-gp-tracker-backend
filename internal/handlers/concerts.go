@@ -17,6 +17,7 @@ type CreateConcertInput struct {
 	Location     string    `json:"location"`
 	PriceCents   int       `json:"price_cents"`
 	TotalTickets int       `json:"total_tickets"`
+	ImageURL     string    `json:"image_url"`
 }
 
 type Concert struct {
@@ -26,6 +27,7 @@ type Concert struct {
 	Location     string    `json:"location"`
 	PriceCents   int       `json:"price_cents"`
 	TotalTickets int       `json:"total_tickets"`
+	ImageURL     string    `json:"image_url"`
 }
 
 type ArtistResponse struct {
@@ -142,13 +144,14 @@ func CreateConcert(w http.ResponseWriter, r *http.Request) {
 
 	_, err := database.DB.Exec(
 		context.Background(),
-		`INSERT INTO concerts (artist_id, date, location, price_cents, total_tickets)
-		 VALUES ($1, $2, $3, $4, $5)`,
+		`INSERT INTO concerts (artist_id, date, location, price_cents, total_tickets, image_url)
+		 VALUES ($1, $2, $3, $4, $5, $6)`,
 		input.ArtistID,
 		input.Date,
 		input.Location,
 		input.PriceCents,
 		input.TotalTickets,
+		input.ImageURL,
 	)
 
 	if err != nil {
