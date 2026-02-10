@@ -71,6 +71,13 @@ func main() {
 		})
 	})
 
+	r.Route("/tickets", func(r chi.Router) {
+		r.Use(myMiddleware.JWT)
+
+		r.Post("/buy/{id}", handlers.BuyTicket) // acheter un ticket
+		r.Get("/me", handlers.GetMyTickets)     // voir MES tickets
+	})
+
 	log.Println("Le serveur se lance sur :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
