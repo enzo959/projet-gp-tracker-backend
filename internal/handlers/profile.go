@@ -10,11 +10,13 @@ import (
 )
 
 type ProfileResponse struct {
-	ID      int             `json:"id"`
-	Name    string          `json:"name"`
-	Email   string          `json:"email"`
-	Image   string          `json:"image"`
-	Tickets []TicketProfile `json:"tickets"`
+	ID        int             `json:"id"`
+	FirstName string          `json:"first_name"`
+	LastName  string          `json:"last name"`
+	Email     string          `json:"email"`
+	Image     string          `json:"image"`
+	Bio       string          `json:"bio"`
+	Tickets   []TicketProfile `json:"tickets"`
 }
 
 type TicketProfile struct {
@@ -32,12 +34,19 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	// Récupérer les infos de l'utilisateur
 	row := database.DB.QueryRow(context.Background(), `
-        SELECT id, name, email, image
+        SELECT id, first_name, last_name, email, image, bio
         FROM users
         WHERE id = $1
     `, userID)
 
-	if err := row.Scan(&profile.ID, &profile.Name, &profile.Email, &profile.Image); err != nil {
+	if err := row.Scan(
+		&profile.ID,
+		&profile.FirstName,
+		&profile.LastName,
+		&profile.Email,
+		&profile.Image,
+		&profile.Bio,
+	); err != nil {
 		http.Error(w, "user not found", http.StatusNotFound)
 		return
 	}
@@ -67,3 +76,6 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(profile)
 }
+
+// ajouter une bio, pdp et nom prénom (on a déja les tickets acheté)
+//faire une fonction update profile
