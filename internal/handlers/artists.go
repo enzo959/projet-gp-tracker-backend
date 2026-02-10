@@ -13,7 +13,7 @@ import (
 type Artist struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
-	ImageURL string `json:"image"`
+	ImageURL string `json:"image_url"`
 }
 
 type ArtistHandler struct {
