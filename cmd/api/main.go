@@ -74,13 +74,15 @@ func main() {
 	r.Route("/tickets", func(r chi.Router) {
 		r.Use(myMiddleware.JWT)
 
-		r.Post("/buy/{id}", handlers.BuyTicket) // acheter ticket
-		r.Get("/me", handlers.GetMyTickets)     // voir tickets
+		r.Post("/buy/{id}", handlers.BuyTicket)  // acheter ticket
+		r.Get("/profile", handlers.GetMyTickets) // voir tickets
 	})
 
-	r.Route("/me", func(r chi.Router) {
+	r.Route("/profile", func(r chi.Router) {
 		r.Use(myMiddleware.JWT)
+
 		r.Get("/", handlers.GetProfile)
+		r.Put("/", handlers.UpdateProfile)
 	})
 
 	log.Println("Le serveur se lance sur :8080")

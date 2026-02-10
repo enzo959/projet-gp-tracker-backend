@@ -19,6 +19,13 @@ type ProfileResponse struct {
 	Tickets   []TicketProfile `json:"tickets"`
 }
 
+type UpdateProfileRequest struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Bio       string `json:"bio"`
+	Image     string `json:"image"`
+}
+
 type TicketProfile struct {
 	ConcertID int       `json:"concert_id"`
 	Name      string    `json:"name"`
@@ -77,5 +84,36 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(profile)
 }
 
-// ajouter une bio, pdp et nom prénom (on a déja les tickets acheté)
-//faire une fonction update profile
+func UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value("user_id").(int)
+
+	var req UpdateProfileRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid body", http.StatusBadRequest)
+		return
+	}
+
+	_, err := database.DB.Exec(context.Background(), `
+		UPDATE users
+		SET first_name = $1,
+		    last_name = $2,
+		    bio = $3,
+		    image = $4,
+		    updated_at = $5
+		WHERE id = $6
+	`,
+		req.FirstName,
+		req.LastName,
+		req.Bio,
+		req.Image,
+		time.Now(),
+		userID,
+	)
+
+	if err != nil {
+		http.Error(w, "error updating profile", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
