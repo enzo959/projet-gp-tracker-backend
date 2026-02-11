@@ -12,7 +12,7 @@ import (
 type ProfileResponse struct {
 	ID        int             `json:"id"`
 	FirstName string          `json:"first_name"`
-	LastName  string          `json:"last name"`
+	LastName  string          `json:"last_name"`
 	Surname   string          `json:"surname"`
 	Email     string          `json:"email"`
 	Image     string          `json:"image"`
@@ -38,14 +38,19 @@ type TicketProfile struct {
 
 func GetProfile(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(int)
-
 	var profile ProfileResponse
+	profile.Tickets = []TicketProfile{}
 
 	// Récupérer les infos de l'utilisateur
 	row := database.DB.QueryRow(context.Background(), `
-        SELECT id, first_name, last_name, surname, email, image, bio
-        FROM users
-        WHERE id = $1
+        SELECT id,
+			COALESCE(first_name, ''),
+			COALESCE(last_name, ''),
+		   	COALESCE(surname, ''),
+		    COALESCE(email, ''),
+			COALESCE(image, ''),
+			bio
+        FROM users WHERE id = $1
     `, userID)
 
 	if err := row.Scan(
@@ -63,7 +68,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	// Récupérer les tickets
 	rows, err := database.DB.Query(context.Background(), `
-        SELECT c.id, c.name, c.date, c.location, t.created_at
+        SELECT c.id, COALESCE(c.location, 'Concert'), c.date, c.location, t.created_at
         FROM tickets t
         JOIN concerts c ON c.id = t.concert_id
         WHERE t.user_id = $1
