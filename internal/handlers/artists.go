@@ -11,9 +11,11 @@ import (
 )
 
 type Artist struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	ImageURL string `json:"image_url"`
+	ID         int    `json:"id"`
+	Name       string `json:"name"`
+	Bio        string `json:"bio"`
+	ImageURL   string `json:"image_url"`
+	MusiqueURL string `json:"musique_url"`
 }
 
 type ArtistHandler struct {
@@ -35,8 +37,10 @@ type Rows interface {
 }
 
 type CreateArtistInput struct {
-	Name     string `json:"name"`
-	ImageURL string `json:"image_url"`
+	Name       string `json:"name"`
+	Bio        string `json:"bio"`
+	ImageURL   string `json:"image_url"`
+	MusiqueURL string `json:"musique_url"`
 }
 
 func NewArtistHandler(db DBQuerier) *ArtistHandler {
@@ -46,7 +50,7 @@ func NewArtistHandler(db DBQuerier) *ArtistHandler {
 func GetArtists(w http.ResponseWriter, r *http.Request) {
 	rows, err := database.DB.Query(
 		context.Background(),
-		"SELECT id, name, image_url FROM artists ORDER BY id",
+		"SELECT id, name, bio, image_url, musique_url FROM artists ORDER BY id",
 	)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -58,7 +62,7 @@ func GetArtists(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var a Artist
-		if err := rows.Scan(&a.ID, &a.Name, &a.ImageURL); err != nil {
+		if err := rows.Scan(&a.ID, &a.Name, &a.Bio, &a.ImageURL, &a.MusiqueURL); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -82,9 +86,11 @@ func CreateArtist(w http.ResponseWriter, r *http.Request) {
 
 	_, err := database.DB.Exec(
 		context.Background(),
-		`INSERT INTO artists (name, image_url) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+		`INSERT INTO artists (name, bio, image_url, musique_url) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`,
 		input.Name,
+		input.Bio,
 		input.ImageURL,
+		input.MusiqueURL,
 	)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -108,8 +114,10 @@ func UpdateArtist(w http.ResponseWriter, r *http.Request) {
 
 	// Décode le JSON reçu dans le body
 	var input struct {
-		Name     string `json:"name"`
-		ImageURL string `json:"image_url"`
+		Name       string `json:"name"`
+		Bio        string `json:"bio"`
+		ImageURL   string `json:"image_url"`
+		MusiqueURL string `json:"musique_url"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "Invalid JSON body", http.StatusBadRequest)
@@ -125,9 +133,11 @@ func UpdateArtist(w http.ResponseWriter, r *http.Request) {
 	// Mise à jour dans la base de données
 	_, err = database.DB.Exec(
 		context.Background(),
-		"UPDATE artists SET name=$1, image_url=$2 WHERE id=$3",
+		"UPDATE artists SET name=$1, bio=$2, image_url=$3, musique_url=$4 WHERE id=$5",
 		input.Name,
+		input.Bio,
 		input.ImageURL,
+		input.MusiqueURL,
 		id,
 	)
 	if err != nil {
