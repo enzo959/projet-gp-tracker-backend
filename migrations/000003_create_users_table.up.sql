@@ -3,5 +3,13 @@ CREATE TABLE users (
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     role TEXT NOT NULL DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT now()
+
+    first_name TEXT DEFAULT '',
+    last_name TEXT DEFAULT '',
+    surname TEXT DEFAULT '',
+    bio TEXT DEFAULT '',
+    image TEXT DEFAULT '',
+
+    created_at TIMESTAMP DEFAULT now(),
+    update_at TIMESTAMP DEFAULT now()
 );
