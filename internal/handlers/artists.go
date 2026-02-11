@@ -133,13 +133,20 @@ func UpdateArtist(w http.ResponseWriter, r *http.Request) {
 	// Mise à jour dans la base de données
 	_, err = database.DB.Exec(
 		context.Background(),
-		"UPDATE artists SET name=$1, bio=$2, image_url=$3, musique_url=$4 WHERE id=$5",
+		`UPDATE artists 
+	 SET name=$1,
+	     bio=$2,
+	     image_url=$3,
+	     musique_url=$4,
+	     updated_at = NOW()
+	 WHERE id=$5`,
 		input.Name,
 		input.Bio,
 		input.ImageURL,
 		input.MusiqueURL,
 		id,
 	)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
