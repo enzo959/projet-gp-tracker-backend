@@ -108,6 +108,7 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	`,
 		req.FirstName,
 		req.LastName,
+		req.Surname,
 		req.Bio,
 		req.Image,
 		time.Now(),
