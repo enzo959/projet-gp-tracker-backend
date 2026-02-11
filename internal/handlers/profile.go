@@ -13,6 +13,7 @@ type ProfileResponse struct {
 	ID        int             `json:"id"`
 	FirstName string          `json:"first_name"`
 	LastName  string          `json:"last name"`
+	Surname   string          `json:"surname"`
 	Email     string          `json:"email"`
 	Image     string          `json:"image"`
 	Bio       string          `json:"bio"`
@@ -22,6 +23,7 @@ type ProfileResponse struct {
 type UpdateProfileRequest struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
+	Surname   string `json:"surname"`
 	Bio       string `json:"bio"`
 	Image     string `json:"image"`
 }
@@ -41,7 +43,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	// Récupérer les infos de l'utilisateur
 	row := database.DB.QueryRow(context.Background(), `
-        SELECT id, first_name, last_name, email, image, bio
+        SELECT id, first_name, last_name, surname, email, image, bio
         FROM users
         WHERE id = $1
     `, userID)
@@ -50,6 +52,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 		&profile.ID,
 		&profile.FirstName,
 		&profile.LastName,
+		&profile.Surname,
 		&profile.Email,
 		&profile.Image,
 		&profile.Bio,
@@ -97,10 +100,11 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		UPDATE users
 		SET first_name = $1,
 		    last_name = $2,
-		    bio = $3,
-		    image = $4,
-		    updated_at = $5
-		WHERE id = $6
+			surname = $3,
+		    bio = $4,
+		    image = $5,
+		    updated_at = $6
+		WHERE id = $7
 	`,
 		req.FirstName,
 		req.LastName,
