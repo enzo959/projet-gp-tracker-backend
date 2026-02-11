@@ -57,12 +57,13 @@ projet_gp_tracker_backend
 ```bash
 git clone <repo_url>
 cd projet_gp_tracker_backend
+```
 
-2️⃣ Créer un fichier .env
+### 2️⃣ Créer un fichier .env
 
 Créer un fichier .env en suivant le modèle du .env-exemple.
 
-Exemple :
+```bash
 
 POSTGRES_USER=zeqzi
 POSTGRES_PASSWORD=your_password
@@ -70,8 +71,10 @@ POSTGRES_DB=groupie_db
 DATABASE_URL=postgres://zeqzi:your_password@db:5432/groupie_db
 API_PORT=8080
 JWT_SECRET=your_secret_key
+```
+---
 
-▶️ Lancement du projet
+### ▶️ Lancement du projet
 
 Pour démarrer l’API et la base de données :
 
@@ -87,7 +90,9 @@ Le backend sera accessible sur :
 
 http://localhost:8080
 
-👤 Fonctionnalités principales
+---
+
+### 👤 Fonctionnalités principales
 
 Inscription utilisateur
 
@@ -103,7 +108,9 @@ Achat de billets
 
 Visualisation des billets depuis le profil
 
-🌐 Accès au Frontend
+---
+
+### 🌐 Accès au Frontend
 
 Ce repository contient uniquement le backend.
 
@@ -113,7 +120,7 @@ https://github.com/allanparis35/projet_gp_tracker.git
 
 Le frontend possède son propre README.md qui explique comment l’installer et le lancer.
 
-⚠️ Le backend doit être lancé avant le frontend.
+# ⚠️ Le backend doit être lancé avant le frontend.
 
 /////////
 
@@ -122,7 +129,7 @@ Le frontend possède son propre README.md qui explique comment l’installer et 
 F.Y.T.by Signal is an online concert ticketing platform.
 This repository contains the Go backend, responsible for managing users, artists, concerts, and authentication.
 
-🚀 Tech Stack
+### 🚀 Tech Stack
 
 Language: Golang 1.25
 
@@ -138,7 +145,9 @@ Database Management: SQL Migrations
 
 Database Visualization Tool: DBeaver
 
-🏗️ Project Architecture
+---
+
+### 🏗️ Project Architecture
 projet_gp_tracker_backend
 |
 |___cmd/
@@ -156,7 +165,9 @@ projet_gp_tracker_backend
 |__docker-compose.yml   → Service orchestration
 |__Dockerfile           → API build configuration
 
-🔐 Security
+---
+
+### 🔐 Security
 
 Passwords are hashed before being stored.
 
@@ -166,16 +177,18 @@ CORS middleware to restrict API access.
 
 Sensitive variables stored in a .env file.
 
-📦 Installation
-1️⃣ Clone the repository
+---
+
+## 📦 Installation
+### 1️⃣ Clone the repository
 git clone <repo_url>
 cd projet_gp_tracker_backend
 
-2️⃣ Create a .env file
+### 2️⃣ Create a .env file
 
 Create a .env file following the .env-example template.
 
-Example:
+```bash
 
 POSTGRES_USER=zeqzi
 POSTGRES_PASSWORD=your_password
@@ -183,8 +196,10 @@ POSTGRES_DB=groupie_db
 DATABASE_URL=postgres://zeqzi:your_password@db:5432/groupie_db
 API_PORT=8080
 JWT_SECRET=your_secret_key
+```
+---
 
-▶️ Running the project
+### ▶️ Running the project
 
 To start the API and the database:
 
@@ -200,7 +215,9 @@ The backend will be available at:
 
 http://localhost:8080
 
-👤 Main Features
+---
+
+### 👤 Main Features
 
 User registration
 
@@ -216,7 +233,9 @@ Purchase tickets
 
 View purchased tickets in the profile
 
-🌐 Frontend Access
+---
+
+### 🌐 Frontend Access
 
 This repository contains only the backend.
 
@@ -227,4 +246,4 @@ https://github.com/allanparis35/projet_gp_tracker.git
 
 The frontend has its own README.md explaining how to install and run it.
 
-⚠️ The backend must be running before starting the frontend.
+# ⚠️ The backend must be running before starting the frontend.
