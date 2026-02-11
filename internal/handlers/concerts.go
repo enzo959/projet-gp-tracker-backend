@@ -13,6 +13,7 @@ import (
 
 type CreateConcertInput struct {
 	ArtistID     int       `json:"artist_id"`
+	ArtistName   int       `json:"artist_name"`
 	Date         time.Time `json:"date"`
 	Location     string    `json:"location"`
 	PriceCents   int       `json:"price_cents"`
@@ -24,6 +25,7 @@ type CreateConcertInput struct {
 type Concert struct {
 	ID           int       `json:"id"`
 	ArtistID     int       `json:"artist_id"`
+	ArtistName   int       `json:"artist_name"`
 	Date         time.Time `json:"date"`
 	Location     string    `json:"location"`
 	PriceCents   int       `json:"price_cents"`
@@ -52,6 +54,7 @@ func fetchConcerts(query string, args ...any) ([]Concert, error) {
 		if err := rows.Scan(
 			&c.ID,
 			&c.ArtistID,
+			&c.ArtistName,
 			&c.Date,
 			&c.Location,
 			&c.PriceCents,
@@ -69,7 +72,7 @@ func fetchConcerts(query string, args ...any) ([]Concert, error) {
 
 func GetConcerts(w http.ResponseWriter, r *http.Request) {
 	concerts, err := fetchConcerts(`
-		SELECT id, artist_id, date, location, price_cents, total_tickets, detail, image_url
+		SELECT id, artist_id, artist_name, date, location, price_cents, total_tickets, detail, image_url
 		FROM concerts
 	`)
 	if err != nil {
@@ -84,7 +87,7 @@ func GetConcertsByArtist(w http.ResponseWriter, r *http.Request) {
 	artistID := chi.URLParam(r, "id")
 
 	concerts, err := fetchConcerts(`
-		SELECT id, artist_id, date, location, price_cents, total_tickets, detail, image_url
+		SELECT id, artist_id, artist_name, date, location, price_cents, total_tickets, detail, image_url
 		FROM concerts
 		WHERE artist_id = $1
 	`, artistID)
@@ -113,7 +116,7 @@ func GetArtistByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	concerts, err := fetchConcerts(`
-		SELECT id, artist_id, date, location, price_cents, total_tickets, detail, image_url
+		SELECT id, artist_id, artist_name, date, location, price_cents, total_tickets, detail, image_url
 		FROM concerts
 		WHERE artist_id = $1
 	`, artistID)
@@ -148,9 +151,10 @@ func CreateConcert(w http.ResponseWriter, r *http.Request) {
 
 	_, err := database.DB.Exec(
 		context.Background(),
-		`INSERT INTO concerts (artist_id, date, location, price_cents, total_tickets, detail, image_url)
-		 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		`INSERT INTO concerts (artist_id, artist_name, date, location, price_cents, total_tickets, detail, image_url)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
 		input.ArtistID,
+		input.ArtistName,
 		input.Date,
 		input.Location,
 		input.PriceCents,
@@ -182,9 +186,10 @@ func UpdateConcert(w http.ResponseWriter, r *http.Request) {
 	_, err := database.DB.Exec(
 		context.Background(),
 		`UPDATE concerts
-		 SET artist_id=$1, date=$2, location=$3, price_cents=$4, total_tickets=$5, detail=$6, image_url=$7
+		 SET artist_id=$1, artist_name=$2, date=$3, location=$4, price_cents=$5, total_tickets=$6, detail=$7, image_url=$8
 		 WHERE id=$6`,
 		input.ArtistID,
+		input.ArtistName,
 		input.Date,
 		input.Location,
 		input.PriceCents,
