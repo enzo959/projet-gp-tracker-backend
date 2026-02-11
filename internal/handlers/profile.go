@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -93,35 +94,35 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProfile(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("user_id").(int)
+	val := r.Context().Value("user_id")
+	if val == nil {
+		http.Error(w, "Utilisateur non authentifié", http.StatusUnauthorized)
+		return
+	}
+
+	userID, ok := val.(int)
+	if !ok {
+		http.Error(w, "ID utilisateur invalide", http.StatusUnauthorized)
+		return
+	}
 
 	var req UpdateProfileRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid body", http.StatusBadRequest)
+		http.Error(w, "JSON invalide", http.StatusBadRequest)
 		return
 	}
 
 	_, err := database.DB.Exec(context.Background(), `
-		UPDATE users
-		SET first_name = $1,
-		    last_name = $2,
-			surname = $3,
-		    bio = $4,
-		    image = $5,
-		    updated_at = $6
-		WHERE id = $7
-	`,
-		req.FirstName,
-		req.LastName,
-		req.Surname,
-		req.Bio,
-		req.Image,
-		time.Now(),
-		userID,
-	)
+        UPDATE users
+        SET surname = $1,
+            bio = $2,
+            updated_at = NOW()
+        WHERE id = $3
+    `, req.Surname, req.Bio, userID)
 
 	if err != nil {
-		http.Error(w, "error updating profile", http.StatusInternalServerError)
+		fmt.Println("Erreur SQL lors de l'Update:", err)
+		http.Error(w, "Erreur base de données", http.StatusInternalServerError)
 		return
 	}
 
