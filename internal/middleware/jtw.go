@@ -47,6 +47,6 @@ func JWT(next http.Handler) http.Handler {
 		ctx = context.WithValue(ctx, "role", claims["role"].(string))
 
 		// Passe au handler suivant
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
