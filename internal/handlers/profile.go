@@ -113,12 +113,15 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err := database.DB.Exec(context.Background(), `
-        UPDATE users
-        SET surname = $1,
-            bio = $2,
-            updated_at = NOW()
-        WHERE id = $3
-    `, req.Surname, req.Bio, userID)
+    UPDATE users
+    SET first_name = $1,
+        last_name = $2,
+        surname = $3,
+        bio = $4,
+        image = $5,
+        updated_at = NOW()
+    WHERE id = $6
+`, req.FirstName, req.LastName, req.Surname, req.Bio, req.Image, userID)
 
 	if err != nil {
 		fmt.Println("Erreur SQL lors de l'Update:", err)
