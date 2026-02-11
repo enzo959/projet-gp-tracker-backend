@@ -74,8 +74,7 @@ func main() {
 	r.Route("/tickets", func(r chi.Router) {
 		r.Use(myMiddleware.JWT)
 
-		r.Post("/buy/{id}", handlers.BuyTicket)  // acheter ticket
-		r.Get("/profile", handlers.GetMyTickets) // voir tickets
+		r.Post("/buy/{id}", handlers.BuyTicket) // acheter ticket
 	})
 
 	r.Route("/profile", func(r chi.Router) {
