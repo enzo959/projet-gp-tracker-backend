@@ -11,5 +11,5 @@ CREATE TABLE users (
     image TEXT DEFAULT '',
 
     created_at TIMESTAMP DEFAULT now(),
-    update_at TIMESTAMP DEFAULT now()
+    updated_at TIMESTAMP DEFAULT now()
 );
