@@ -48,9 +48,9 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 			COALESCE(first_name, ''),
 			COALESCE(last_name, ''),
 		   	COALESCE(surname, ''),
-		    COALESCE(email, ''),
+		    email,
 			COALESCE(image, ''),
-			bio
+			COALESCE(bio, '')
         FROM users WHERE id = $1
     `, userID)
 
